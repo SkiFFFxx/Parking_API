@@ -33,20 +33,34 @@ class ParkController extends Controller
     // Забронировать место (фейковая логика)
     public function bookParking(Request $request)
     {
-        $request->validate([
+        $messages = [
+            'slot_id.required' => 'Идентификатор парковочного места обязателен.',
+            'slot_id.integer' => 'Идентификатор парковочного места должен быть числом.',
+
+            'start_time.required' => 'Время начала бронирования обязательно.',
+            'start_time.date_format' => 'Время начала должно быть в формате ЧЧ:ММ (например, 14:30).',
+
+            'end_time.required' => 'Время окончания бронирования обязательно.',
+            'end_time.date_format' => 'Время окончания должно быть в формате ЧЧ:ММ (например, 16:45).',
+            'end_time.after' => 'Время окончания должно быть позже времени начала.',
+        ];
+
+        // Валидация с сообщениями об ошибках
+        $validatedData = $request->validate([
             'slot_id' => 'required|integer',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
-        ]);
+        ], $messages);
 
         return response()->json([
             'status' => 'success',
             'message' => 'Парковочное место успешно забронировано!',
             'data' => [
-                'slot_id' => $request->slot_id,
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time
+                'slot_id' => $validatedData['slot_id'],
+                'start_time' => $validatedData['start_time'],
+                'end_time' => $validatedData['end_time']
             ]
         ]);
     }
+
 }
