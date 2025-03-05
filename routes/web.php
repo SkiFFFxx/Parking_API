@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ParkingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +22,13 @@ Route::get('/', function () {
 //Route::group(['middleware' => ['isAdmin']], function () {
 //
 //});
+
+
+Route::get('/parking', [ParkingController::class, 'index'])->name('parking.index');
+
+Route::get('/parking/create', [ParkingController::class, 'create'])->name('parking.create');
+
+
 
 
 Route::resource('workers', \App\Http\Controllers\WorkerController::class);  #->middleware(['auth', 'isAdmin']);
